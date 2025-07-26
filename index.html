@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema PDV - VIDA SAUDAVEL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.8.0/dist/jspdf.plugin.autotable.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #2e7d32;
+        color: #ffffff;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .header .time {
+        font-size: 1.25rem;
+        font-family: 'Courier New', monospace;
+      }
+
+      .main-container {
+        display: flex;
+        height: calc(100vh - 80px);
+      }
+
+      .main-area {
+        flex: 1;
+        padding: 1.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .waiting-screen {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .clock-display {
+        font-size: 5rem;
+        font-family: 'Courier New', monospace;
+        color: #4caf50;
+        margin-bottom: 2rem;
+      }
+
+      .date-display {
+        font-size: 1.5rem;
+        color: #333333;
+        margin-bottom: 1rem;
+      }
+
+      .waiting-message {
+        font-size: 1.25rem;
+        color: #333333;
+      }
+
+      .cart-area {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+      }
+
+      .cart-item {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .cart-item.selected {
+        background-color: #e8f5e9;
+        border-color: #4caf50;
+      }
+
+      .cart-item-info h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .cart-item-details {
+        font-size: 0.875rem;
+        color: #333333;
+      }
+
+      .cart-item-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .discount-info {
+        font-size: 0.875rem;
+        color: #ff9800;
+      }
+
+      .input-area {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .input-area input {
+        flex: 1;
+        padding: 0.75rem;
+        font-size: 1.125rem;
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.375rem;
+        color: #000000;
+      }
+
+      .input-area input:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background-color: #4caf50;
+        color: #ffffff;
+      }
+
+      .btn-primary:hover {
+        background-color: #388e3c;
+      }
+
+      .btn-secondary {
+        background-color: #f5f5f5;
+        color: #000000;
+        border: 1px solid #e0e0e0;
+      }
+
+      .btn-secondary:hover {
+        background-color: #e0e0e0;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        color: #000000;
+        border: 1px solid #e0e0e0;
+      }
+
+      .btn-outline:hover {
+        background-color: #f5f5f5;
+      }
+
+      .sidebar {
+        width: 24rem;
+        background-color: #f5f5f5;
+        border-left: 1px solid #e0e0e0;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .total-display {
+        text-align: center;
+      }
+
+      .total-label {
+        font-size: 0.875rem;
+        color: #333333;
+        margin-bottom: 0.5rem;
+      }
+
+      .total-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4caf50;
+      }
+
+      .payment-info {
+        margin-top: 1rem;
+      }
+
+      .payment-info .paid {
+        font-size: 0.875rem;
+        color: #333333;
+      }
+
+      .payment-info .remaining {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #ff9800;
+      }
+
+      .total-modifiers {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+
+      .total-modifiers .discount {
+        color: #f44336;
+      }
+
+      .total-modifiers .addition {
+        color: #4caf50;
+      }
+
+      .payments-list {
+        margin-bottom: 1rem;
+      }
+
+      .payments-list h3 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .payment-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .payment-form {
+        margin-bottom: 1rem;
+      }
+
+      .payment-form h3 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .payment-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .payment-buttons .btn {
+        text-transform: capitalize;
+        padding: 0.5rem;
+      }
+
+      .payment-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .finalize-btn {
+        width: 100%;
+        font-size: 1.125rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .shortcuts {
+        font-size: 0.75rem;
+      }
+
+      .shortcuts h3 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .shortcut-item {
+        margin-bottom: 0.25rem;
+      }
+
+      .shortcut-item strong {
+        display: inline-block;
+        width: 2.5rem;
+      }
+
+      .toast {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        max-width: 300px;
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .toast.show {
+        transform: translateX(0);
+      }
+
+      .toast.success {
+        border-color: #4caf50;
+      }
+
+      .toast.error {
+        border-color: #f44336;
+      }
+
+      .toast.warning {
+        border-color: #ffca28;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #authSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      #authSection h3 {
+        color: #333333;
+        margin-bottom: 20px;
+      }
+
+      #authSection input {
+        width: 300px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 1rem;
+        color: #000000;
+      }
+
+      #authSection button {
+        background-color: #4caf50;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      #authSection button:hover {
+        background-color: #388e3c;
+      }
+    </style>
+    <script type="text/javascript" src="./index.js" defer=""></script>
+    <link rel="stylesheet" href="./index.css">
+  </head>
+
+  <body>
+    <!-- Seção de Autenticação -->
+    <div id="authSection">
+      <h3>Login / Cadastro</h3>
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Senha">
+      <button id="registerBtn">Cadastrar</button>
+      <button id="loginBtn">Entrar</button>
+    </div>
+
+    <!-- Header -->
+    <div id="header" class="header hidden">
+      <h1>Sistema PDV - VIDA SAUDAVEL</h1>
+      <div class="time" id="current-time"></div>
+      <button id="logoutBtn" class="btn btn-secondary">Sair</button>
+    </div>
+
+    <!-- Main Container -->
+    <div id="main-container" class="main-container hidden">
+      <!-- Main Area -->
+      <div class="main-area">
+        <!-- Waiting Screen -->
+        <div id="waiting-screen" class="waiting-screen">
+          <div>
+            <div class="clock-display" id="clock-display"></div>
+            <div class="date-display" id="date-display"></div>
+            <div class="waiting-message">Aguardando código de barras...</div>
+          </div>
+        </div>
+
+        <!-- Cart Area -->
+        <div id="cart-area" class="cart-area hidden"></div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+          <input type="text" id="barcode-input" placeholder="Código de barras, gramatura (ex: 150 *) ou código do produto" autofocus="">
+          <button class="btn btn-primary" onclick="addProduct()">Adicionar Item</button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Total -->
+        <div class="card">
+          <div class="total-display">
+            <div class="total-label">TOTAL GERAL</div>
+            <div class="total-amount" id="total-amount">R$ 0,00</div>
+            <div class="total-modifiers" id="total-modifiers" style="display: none;">
+              <div class="discount" id="total-discount-display"></div>
+              <div class="addition" id="total-addition-display"></div>
+            </div>
+            <div class="payment-info" id="payment-info" style="display: none;">
+              <div class="paid">Pago: R$ <span id="total-paid">0,00</span></div>
+              <div class="remaining">Restante: R$ <span id="remaining-amount">0,00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payments List -->
+        <div id="payments-card" class="card hidden">
+          <h3>Pagamentos</h3>
+          <div id="payments-list"></div>
+        </div>
+
+        <!-- Payment Form -->
+        <div id="payment-form" class="card hidden">
+          <h3>Forma de Pagamento</h3>
+          <div class="payment-buttons">
+            <button class="btn btn-primary" id="btn-dinheiro">Dinheiro</button>
+            <button class="btn btn-outline" id="btn-pix">PIX</button>
+            <button class="btn btn-outline" id="btn-credito">Crédito</button>
+            <button class="btn btn-outline" id="btn-debito">Débito</button>
+          </div>
+          <input type="number" id="payment-amount" placeholder="Valor" step="0.01" style="width: 100%; margin-bottom: 1rem;">
+          <div class="payment-actions">
+            <button class="btn btn-primary" id="confirm-payment-btn" style="flex: 1;">Confirmar</button>
+            <button class="btn btn-outline" id="cancel-payment-btn">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- Total Modifiers Buttons -->
+        <div class="card">
+          <button class="btn btn-outline" id="total-discount-btn">Desconto Total (F6)</button>
+          <button class="btn btn-outline" id="total-addition-btn">Acréscimo Total (F7)</button>
+        </div>
+
+        <!-- Finalize Button -->
+        <button id="finalize-btn" class="btn btn-primary finalize-btn hidden" onclick="showPaymentForm()">
+          Finalizar Venda (F5)
+        </button>
+
+        <!-- Shortcuts -->
+        <div class="card shortcuts">
+          <h3>Teclas de Atalho</h3>
+          <div class="shortcut-item"><strong>F1:</strong> Cancelar venda</div>
+          <div class="shortcut-item"><strong>F2:</strong> Remover item</div>
+          <div class="shortcut-item"><strong>F3:</strong> Desconto do item</div>
+          <div class="shortcut-item"><strong>F4:</strong> Acréscimo do item</div>
+          <div class="shortcut-item"><strong>F5:</strong> Finalizar venda</div>
+          <div class="shortcut-item"><strong>F6:</strong> Desconto total</div>
+          <div class="shortcut-item"><strong>F7:</strong> Acréscimo total</div>
+          <div class="shortcut-item"><strong>↑↓:</strong> Navegar itens</div>
+          <div class="shortcut-item"><strong>Enter:</strong> Confirmar</div>
+          <div class="shortcut-item"><strong>Esc:</strong> Cancelar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+      import {
+        initializeApp
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        update,
+        onValue,
+        push
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDJBdK9I-jtg9ujTc9Xsxr-hnPfkId4wIU",
+        authDomain: "pdv1-77632.firebaseapp.com",
+        databaseURL: "https://pdv1-77632-default-rtdb.firebaseio.com",
+        projectId: "pdv1-77632",
+        storageBucket: "pdv1-77632.firebasestorage.app",
+        messagingSenderId: "246033791117",
+        appId: "1:246033791117:web:7b70b511ea8d8c5ba1cac4",
+        measurementId: "G-NTG13SG6VM"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth();
+      const db = getDatabase();
+
+      // Estado da aplicação
+      let cart = [];
+      let payments = [];
+      let selectedCartIndex = 0;
+      let selectedPaymentType = 'dinheiro';
+      let productsDatabase = {};
+      let tempWeight = null;
+      let totalDiscount = 0;
+      let totalAddition = 0;
+
+      // Elementos DOM
+      const authSection = document.getElementById('authSection');
+      const header = document.getElementById('header');
+      const mainContainer = document.getElementById('main-container');
+      const currentTimeEl = document.getElementById('current-time');
+      const clockDisplayEl = document.getElementById('clock-display');
+      const dateDisplayEl = document.getElementById('date-display');
+      const waitingScreenEl = document.getElementById('waiting-screen');
+      const cartAreaEl = document.getElementById('cart-area');
+      const barcodeInputEl = document.getElementById('barcode-input');
+      const totalAmountEl = document.getElementById('total-amount');
+      const paymentInfoEl = document.getElementById('payment-info');
+      const totalPaidEl = document.getElementById('total-paid');
+      const remainingAmountEl = document.getElementById('remaining-amount');
+      const paymentsCardEl = document.getElementById('payments-card');
+      const paymentsListEl = document.getElementById('payments-list');
+      const paymentFormEl = document.getElementById('payment-form');
+      const finalizeBtn = document.getElementById('finalize-btn');
+      const paymentAmountEl = document.getElementById('payment-amount');
+      const toastEl = document.getElementById('toast');
+      const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+      const cancelPaymentBtn = document.getElementById('cancel-payment-btn');
+      const totalDiscountBtn = document.getElementById('total-discount-btn');
+      const totalAdditionBtn = document.getElementById('total-addition-btn');
+      const totalModifiersEl = document.getElementById('total-modifiers');
+      const totalDiscountDisplay = document.getElementById('total-discount-display');
+      const totalAdditionDisplay = document.getElementById('total-addition-display');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const registerBtn = document.getElementById('registerBtn');
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Função para atualizar o relógio
+      function updateTime() {
+        const now = new Date();
+        const timeStr = now.toLocaleString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+
+        const timeOnly = now.toLocaleTimeString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+
+        const dateOnly = now.toLocaleDateString('pt-BR', {
+          timeZone: 'America/Sao_Paulo'
+        });
+
+        currentTimeEl.textContent = timeStr;
+        clockDisplayEl.textContent = timeOnly;
+        dateDisplayEl.textContent = dateOnly;
+      }
+
+      // Função para mostrar toast
+      function showToast(message, type = 'success') {
+        toastEl.textContent = message;
+        toastEl.className = `toast ${type}`;
+        toastEl.classList.add('show');
+        setTimeout(() => {
+          toastEl.classList.remove('show');
+        }, 3000);
+      }
+
+      // Função para carregar produtos do Firebase
+      function loadProductsFromDatabase() {
+        const user = auth.currentUser;
+        if (user) {
+          const produtosRef = ref(db, `produtos/${user.uid}`);
+          onValue(produtosRef, snapshot => {
+            productsDatabase = snapshot.exists() ? snapshot.val() : {};
+            updateDisplay();
+          }, {
+            onlyOnce: false
+          });
+        }
+      }
+
+      // Função para buscar produto por código
+      async function findProduct(barcode) {
+        if (productsDatabase[barcode]) {
+          return {
+            id: barcode,
+            barcode: barcode,
+            name: productsDatabase[barcode].nome,
+            price: productsDatabase[barcode].preco,
+            unit: productsDatabase[barcode].unidade,
+            stock: productsDatabase[barcode].estoque || 0
+          };
+        }
+        return null;
+      }
+
+      // Função para adicionar produto ao carrinho
+      async function addProductToCart(input) {
+        let product;
+        let quantity = 1;
+        let price;
+
+        if (input.endsWith('*') && !tempWeight) {
+          const weightInput = input.slice(0, -1).trim();
+          const weight = parseFloat(weightInput);
+          if (isNaN(weight) || weight <= 0) {
+            showToast("Por favor, insira uma gramatura válida (ex.: 150 *).", 'error');
+            return;
+          }
+          tempWeight = weight / 1000;
+          showToast(`Gramatura de ${weight}g registrada. Digite o código do produto.`, 'success');
+          barcodeInputEl.placeholder = "Digite o código do produto";
+          setTimeout(() => {
+            if (tempWeight) {
+              tempWeight = null;
+              barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+              showToast("Tempo esgotado. Insira a gramatura novamente.", 'warning');
+            }
+          }, 30000);
+          return;
+        } else if (tempWeight) {
+          product = await findProduct(input);
+          if (!product) {
+            showToast(`Produto com código ${input} não encontrado.`, 'error');
+            tempWeight = null;
+            barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+            return;
+          }
+          if (product.unit !== 'kilo') {
+            showToast(`Produto ${product.name} não é do tipo 'kilo'.`, 'error');
+            tempWeight = null;
+            barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+            return;
+          }
+          quantity = tempWeight;
+          price = product.price * quantity;
+          tempWeight = null;
+        } else if (input.startsWith('2') && input.length === 13) {
+          const productCode = input.slice(1, 7);
+          product = await findProduct(productCode);
+          if (!product || product.unit !== 'kilo') {
+            showToast(`Produto com código ${productCode} não encontrado ou não é do tipo 'kilo'.`, 'error');
+            return;
+          }
+          const priceCents = parseInt(input.slice(7, 12));
+          price = priceCents / 100;
+          quantity = price / product.price;
+          if (isNaN(quantity) || quantity <= 0) {
+            showToast("Erro ao calcular o peso do produto.", 'error');
+            return;
+          }
+        } else {
+          product = await findProduct(input);
+          if (!product) {
+            showToast(`Produto com código ${input} não encontrado.`, 'error');
+            return;
+          }
+          if (product.unit === 'kilo') {
+            showToast(`Produto ${product.name} é do tipo 'kilo'. Use gramatura (ex.: 150 *).`, 'error');
+            return;
+          }
+          price = product.price;
+          quantity = 1;
+        }
+
+        const existingIndex = cart.findIndex(item => item.product.id === product.id);
+        if (existingIndex >= 0) {
+          cart[existingIndex].quantity += quantity;
+          cart[existingIndex].subtotal = cart[existingIndex].quantity * product.price;
+        } else {
+          cart.push({
+            product,
+            quantity,
+            subtotal: price,
+            discount: 0
+          });
+        }
+
+        showToast(`${product.name} - R$ ${price.toFixed(2)}`, 'success');
+        barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+        updateDisplay();
+      }
+
+      // Adicionar produto
+      function addProduct() {
+        const input = barcodeInputEl.value.trim();
+        if (input) {
+          addProductToCart(input);
+          barcodeInputEl.value = '';
+          barcodeInputEl.focus();
+        }
+      }
+
+      // Atualizar display
+      function updateDisplay() {
+        if (cart.length === 0) {
+          waitingScreenEl.classList.remove('hidden');
+          cartAreaEl.classList.add('hidden');
+          finalizeBtn.classList.add('hidden');
+          paymentFormEl.classList.add('hidden');
+          paymentsCardEl.classList.add('hidden');
+          paymentInfoEl.style.display = 'none';
+          totalModifiersEl.style.display = 'none';
+          payments = [];
+          totalDiscount = 0;
+          totalAddition = 0;
+        } else {
+          waitingScreenEl.classList.add('hidden');
+          cartAreaEl.classList.remove('hidden');
+          finalizeBtn.classList.remove('hidden');
+          updateCart();
+        }
+        updateTotals();
+      }
+
+      // Atualizar carrinho
+      function updateCart() {
+        cartAreaEl.innerHTML = '';
+        cart.forEach((item, index) => {
+          const itemEl = document.createElement('div');
+          const quantityDisplay = item.product.unit === 'kilo' ?
+            `${(item.quantity * 1000).toFixed(0)}g` :
+            `${item.quantity} un`;
+          itemEl.className = `cart-item ${index === selectedCartIndex ? 'selected' : ''}`;
+          itemEl.innerHTML = `
+                    <div class="cart-item-info">
+                        <h3>${item.product.name}</h3>
+                        <div class="cart-item-details">
+                            Código: ${item.product.barcode} | Qtd: ${quantityDisplay} | 
+                            Unitário: R$ ${item.product.price.toFixed(2)}
+                        </div>
+                        ${item.discount > 0 ? `<div class="discount-info">Desconto: R$ ${item.discount.toFixed(2)}</div>` : ''}
+                    </div>
+                    <div class="cart-item-price">
+                        R$ ${(item.subtotal - item.discount).toFixed(2)}
+                    </div>
+                `;
+          cartAreaEl.appendChild(itemEl);
+        });
+      }
+
+      // Atualizar totais
+      function updateTotals() {
+        const baseSubtotal = cart.reduce((sum, item) => sum + item.subtotal - item.discount, 0);
+        const subtotal = parseFloat((baseSubtotal - totalDiscount + totalAddition).toFixed(2));
+        const totalPaid = parseFloat(payments.reduce((sum, payment) => sum + parseFloat(payment.amount), 0).toFixed(2));
+        const remaining = parseFloat((subtotal - totalPaid).toFixed(2));
+
+        totalAmountEl.textContent = `R$ ${subtotal.toFixed(2)}`;
+
+        if (totalDiscount > 0 || totalAddition > 0) {
+          totalModifiersEl.style.display = 'block';
+          totalDiscountDisplay.textContent = totalDiscount > 0 ? `Desconto Total: R$ ${totalDiscount.toFixed(2)}` : '';
+          totalAdditionDisplay.textContent = totalAddition > 0 ? `Acréscimo Total: R$ ${totalAddition.toFixed(2)}` : '';
+        } else {
+          totalModifiersEl.style.display = 'none';
+        }
+
+        if (payments.length > 0) {
+          paymentInfoEl.style.display = 'block';
+          totalPaidEl.textContent = totalPaid.toFixed(2);
+          remainingAmountEl.textContent = remaining.toFixed(2);
+          updatePaymentsList();
+        } else {
+          paymentInfoEl.style.display = 'none';
+        }
+      }
+
+      // Atualizar lista de pagamentos
+      function updatePaymentsList() {
+        paymentsCardEl.classList.toggle('hidden', payments.length === 0);
+        paymentsListEl.innerHTML = '';
+        payments.forEach(payment => {
+          const paymentEl = document.createElement('div');
+          paymentEl.className = 'payment-item';
+          paymentEl.innerHTML = `
+                    <span style="text-transform: capitalize;">${payment.type}</span>
+                    <span>R$ ${parseFloat(payment.amount).toFixed(2)}</span>
+                `;
+          paymentsListEl.appendChild(paymentEl);
+        });
+      }
+
+      // Mostrar formulário de pagamento
+      function showPaymentForm() {
+        if (cart.length > 0) {
+          paymentFormEl.classList.remove('hidden');
+          finalizeBtn.classList.add('hidden');
+          selectPaymentType('dinheiro');
+          paymentAmountEl.value = '';
+          paymentAmountEl.focus();
+        }
+      }
+
+      // Selecionar tipo de pagamento
+      function selectPaymentType(type) {
+        selectedPaymentType = type;
+        ['dinheiro', 'pix', 'credito', 'debito'].forEach(t => {
+          const btn = document.getElementById(`btn-${t}`);
+          btn.className = t === type ? 'btn btn-primary' : 'btn btn-outline';
+        });
+        paymentAmountEl.focus();
+      }
+
+      // Adicionar pagamento
+      async function addPayment() {
+        const amount = parseFloat(paymentAmountEl.value).toFixed(2);
+        const baseSubtotal = cart.reduce((sum, item) => sum + item.subtotal - item.discount, 0);
+        const subtotal = parseFloat((baseSubtotal - totalDiscount + totalAddition).toFixed(2));
+        const totalPaid = parseFloat(payments.reduce((sum, payment) => sum + parseFloat(payment.amount), 0).toFixed(2));
+        const remaining = parseFloat((subtotal - totalPaid).toFixed(2));
+
+        if (isNaN(amount) || amount <= 0) {
+          showToast('Insira um valor válido.', 'error');
+          return;
+        }
+
+        // Permitir pagamento do valor exato
+        if (parseFloat(amount) > parseFloat(remaining) + 0.01) {
+          showToast(`Valor excede o restante (R$ ${remaining.toFixed(2)}).`, 'error');
+          return;
+        }
+
+        payments.push({
+          type: selectedPaymentType,
+          amount: parseFloat(amount)
+        });
+
+        updateTotals();
+        updatePaymentsList();
+
+        // Verificar se a venda pode ser finalizada
+        const newTotalPaid = parseFloat((totalPaid + parseFloat(amount)).toFixed(2));
+        if (newTotalPaid >= subtotal - 0.01) {
+          try {
+            const user = auth.currentUser;
+            if (!user) {
+              showToast('Usuário não autenticado.', 'error');
+              return;
+            }
+
+            const updates = {};
+            cart.forEach(item => {
+              const productCode = item.product.id;
+              const currentStock = productsDatabase[productCode]?.estoque || 0;
+              const newStock = currentStock - item.quantity;
+              updates[`produtos/${user.uid}/${productCode}/estoque`] = newStock;
+            });
+
+            const saleData = {
+              dataVenda: new Date().toISOString(),
+              valorTotal: subtotal,
+              tipoPagamento: selectedPaymentType,
+              descontoTotal: totalDiscount,
+              acrescimoTotal: totalAddition,
+              items: cart.map(item => ({
+                codigo: item.product.barcode,
+                nome: item.product.name,
+                preco: item.subtotal - item.discount,
+                quantidade: item.quantity,
+                unidade: item.product.unit
+              })),
+              observacoes: "Venda PDV"
+            };
+
+            const baseRef = ref(db, `vendas/${user.uid}`);
+            const newSaleRef = push(baseRef);
+            await Promise.all([
+              set(newSaleRef, saleData),
+              update(ref(db), updates)
+            ]);
+
+            printSaleReceipt(saleData, parseFloat(amount));
+            showToast(`Venda finalizada! Total: R$ ${subtotal.toFixed(2)}`, 'success');
+            cancelSale();
+          } catch (error) {
+            showToast(`Erro ao finalizar venda: ${error.message}`, 'error');
+            console.error(error);
+          }
+        } else {
+          paymentAmountEl.value = '';
+          paymentAmountEl.focus();
+          showToast(`Pagamento de R$ ${parseFloat(amount).toFixed(2)} adicionado. Restante: R$ ${(remaining - amount).toFixed(2)}`, 'success');
+        }
+      }
+
+      // Função para imprimir recibo de venda
+      function printSaleReceipt(sale, amountGiven) {
+        const {
+          jsPDF
+        } = window.jspdf;
+        const doc = new jsPDF();
+
+        const shopName = "VIDA SAUDAVEL";
+        const dateTime = new Date(sale.dataVenda).toLocaleString('pt-BR');
+
+        let yPos = 10;
+        const margin = 10;
+        const lineHeight = 7;
+
+        doc.setFontSize(14);
+        doc.text(shopName, doc.internal.pageSize.getWidth() / 2, yPos, {
+          align: 'center'
+        });
+        yPos += lineHeight;
+
+        doc.setFontSize(10);
+        doc.text(`Data: ${dateTime}`, margin, yPos);
+        yPos += lineHeight;
+        doc.text("-----------------------------------------", margin, yPos);
+        yPos += lineHeight;
+
+        doc.text("ITENS DA VENDA:", margin, yPos);
+        yPos += lineHeight;
+
+        sale.items.forEach(item => {
+          const quantidadeDisplay = item.unidade === 'kilo' ?
+            `${(item.quantidade * 1000).toFixed(0)}g` :
+            `${item.quantidade} un`;
+          doc.text(`${item.nome} (${quantidadeDisplay})`, margin, yPos);
+          doc.text(`R$ ${item.preco.toFixed(2).replace('.', ',')}`, doc.internal.pageSize.getWidth() - margin, yPos, {
+            align: 'right'
+          });
+          yPos += lineHeight;
+        });
+
+        doc.text("-----------------------------------------", margin, yPos);
+        yPos += lineHeight;
+
+        doc.setFontSize(12);
+        if (sale.descontoTotal > 0) {
+          doc.text(`Desconto Total: R$ ${sale.descontoTotal.toFixed(2).replace('.', ',')}`, margin, yPos);
+          yPos += lineHeight;
+        }
+        if (sale.acrescimoTotal > 0) {
+          doc.text(`Acréscimo Total: R$ ${sale.acrescimoTotal.toFixed(2).replace('.', ',')}`, margin, yPos);
+          yPos += lineHeight;
+        }
+        doc.text(`TOTAL: R$ ${sale.valorTotal.toFixed(2).replace('.', ',')}`, margin, yPos);
+        doc.text(`Pagamento: ${sale.tipoPagamento}`, margin, yPos + lineHeight);
+        yPos += lineHeight * 2;
+
+        if (sale.tipoPagamento === "dinheiro") {
+          const change = parseFloat((amountGiven - sale.valorTotal).toFixed(2));
+          doc.text(`Valor Recebido: R$ ${amountGiven.toFixed(2).replace('.', ',')}`, margin, yPos);
+          yPos += lineHeight;
+          doc.text(`Troco: R$ ${change.toFixed(2).replace('.', ',')}`, margin, yPos);
+          yPos += lineHeight;
+        }
+
+        doc.text("-----------------------------------------", margin, yPos);
+        yPos += lineHeight;
+        doc.setFontSize(10);
+        doc.text("Obrigado pela preferência!", doc.internal.pageSize.getWidth() / 2, yPos, {
+          align: 'center'
+        });
+
+        doc.save(`venda_${new Date(sale.dataVenda).getTime()}.pdf`);
+      }
+
+      // Cancelar pagamento
+      function cancelPayment() {
+        paymentFormEl.classList.add('hidden');
+        if (cart.length > 0) {
+          finalizeBtn.classList.remove('hidden');
+        }
+        paymentAmountEl.value = '';
+        selectPaymentType('dinheiro');
+        barcodeInputEl.focus();
+      }
+
+      // Cancelar venda
+      function cancelSale() {
+        cart = [];
+        payments = [];
+        selectedCartIndex = 0;
+        tempWeight = null;
+        totalDiscount = 0;
+        totalAddition = 0;
+        barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+        updateDisplay();
+        showToast('Venda cancelada', 'warning');
+        barcodeInputEl.focus();
+      }
+
+      // Remover item
+      function removeItem() {
+        if (cart.length > 0 && selectedCartIndex < cart.length) {
+          cart.splice(selectedCartIndex, 1);
+          selectedCartIndex = Math.max(0, selectedCartIndex - 1);
+          updateDisplay();
+          showToast('Item removido', 'warning');
+        }
+      }
+
+      // Aplicar desconto no item
+      function applyDiscount() {
+        if (cart.length > 0 && selectedCartIndex < cart.length) {
+          const discountValue = prompt('Digite o valor do desconto no item (R$):');
+          if (discountValue && !isNaN(parseFloat(discountValue))) {
+            const discount = parseFloat(discountValue);
+            cart[selectedCartIndex].discount = discount;
+            updateDisplay();
+            showToast(`Desconto aplicado: R$ ${discount.toFixed(2)}`, 'success');
+          }
+        }
+      }
+
+      // Aplicar acréscimo no item
+      function applyAddition() {
+        if (cart.length > 0 && selectedCartIndex < cart.length) {
+          const addValue = prompt('Digite o valor do acréscimo no item (R$):');
+          if (addValue && !isNaN(parseFloat(addValue))) {
+            const addition = parseFloat(addValue);
+            cart[selectedCartIndex].subtotal += addition;
+            updateDisplay();
+            showToast(`Acréscimo aplicado: R$ ${addition.toFixed(2)}`, 'success');
+          }
+        }
+      }
+
+      // Aplicar desconto total
+      function applyTotalDiscount() {
+        if (cart.length > 0) {
+          const discountValue = prompt('Digite o valor do desconto total (R$):');
+          if (discountValue && !isNaN(parseFloat(discountValue))) {
+            const discount = parseFloat(discountValue);
+            totalDiscount = discount;
+            updateDisplay();
+            showToast(`Desconto total aplicado: R$ ${discount.toFixed(2)}`, 'success');
+          }
+        }
+      }
+
+      // Aplicar acréscimo total
+      function applyTotalAddition() {
+        if (cart.length > 0) {
+          const addValue = prompt('Digite o valor do acréscimo total (R$):');
+          if (addValue && !isNaN(parseFloat(addValue))) {
+            const addition = parseFloat(addValue);
+            totalAddition = addition;
+            updateDisplay();
+            showToast(`Acréscimo total aplicado: R$ ${addition.toFixed(2)}`, 'success');
+          }
+        }
+      }
+
+      // Função de registro
+      function registerUser() {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+          showToast('Por favor, preencha email e senha.', 'error');
+          return;
+        }
+
+        if (password.length < 6) {
+          showToast('A senha deve ter pelo menos 6 caracteres.', 'error');
+          return;
+        }
+
+        showToast('Registrando usuário...', 'warning');
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            showToast('Usuário registrado com sucesso!', 'success');
+            emailInput.value = '';
+            passwordInput.value = '';
+          })
+          .catch(err => {
+            let message = 'Erro ao registrar usuário.';
+            if (err.code === 'auth/email-already-in-use') {
+              message = 'Email já está em uso.';
+            } else if (err.code === 'auth/invalid-email') {
+              message = 'Email inválido.';
+            }
+            showToast(message, 'error');
+            console.error('Erro no registro:', err);
+          });
+      }
+
+      // Função de login
+      function loginUser() {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+          showToast('Por favor, preencha email e senha.', 'error');
+          return;
+        }
+
+        showToast('Fazendo login...', 'warning');
+        signInWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            showToast('Login realizado com sucesso!', 'success');
+            emailInput.value = '';
+            passwordInput.value = '';
+            setTimeout(() => {
+              loadProductsFromDatabase();
+              barcodeInputEl.focus();
+            }, 500);
+          })
+          .catch(err => {
+            let message = 'Erro ao fazer login.';
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+              message = 'Email ou senha inválidos.';
+            } else if (err.code === 'auth/invalid-email') {
+              message = 'Email inválido.';
+            }
+            showToast(message, 'error');
+            console.error('Erro no login:', err);
+          });
+      }
+
+      // Configurar eventos de tipo de pagamento
+      ['dinheiro', 'pix', 'credito', 'debito'].forEach(type => {
+        const btn = document.getElementById(`btn-${type}`);
+        btn.addEventListener('click', () => selectPaymentType(type));
+      });
+
+      // Configurar eventos de confirmação e cancelamento
+      confirmPaymentBtn.addEventListener('click', addPayment);
+      cancelPaymentBtn.addEventListener('click', cancelPayment);
+      totalDiscountBtn.addEventListener('click', applyTotalDiscount);
+      totalAdditionBtn.addEventListener('click', applyTotalAddition);
+      registerBtn.addEventListener('click', registerUser);
+      loginBtn.addEventListener('click', loginUser);
+      logoutBtn.addEventListener('click', () => {
+        signOut(auth).then(() => {
+          showToast('Logout realizado!', 'warning');
+          emailInput.focus();
+        });
+      });
+
+      // Listener de autenticação
+      onAuthStateChanged(auth, user => {
+        console.log('Estado de autenticação:', user ? `Usuário logado: ${user.uid}` : 'Nenhum usuário logado');
+        if (user) {
+          authSection.classList.add('hidden');
+          header.classList.remove('hidden');
+          mainContainer.classList.remove('hidden');
+          loadProductsFromDatabase();
+          updateTime();
+          barcodeInputEl.focus();
+        } else {
+          authSection.classList.remove('hidden');
+          header.classList.add('hidden');
+          mainContainer.classList.add('hidden');
+          cart = [];
+          payments = [];
+          productsDatabase = {};
+          totalDiscount = 0;
+          totalAddition = 0;
+          updateDisplay();
+          emailInput.focus();
+        }
+      });
+
+      // Event listeners
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'F1') {
+          e.preventDefault();
+          cancelSale();
+        }
+        if (e.key === 'F2') {
+          e.preventDefault();
+          removeItem();
+        }
+        if (e.key === 'F3') {
+          e.preventDefault();
+          applyDiscount();
+        }
+        if (e.key === 'F4') {
+          e.preventDefault();
+          applyAddition();
+        }
+        if (e.key === 'F5') {
+          e.preventDefault();
+          showPaymentForm();
+        }
+        if (e.key === 'F6') {
+          e.preventDefault();
+          applyTotalDiscount();
+        }
+        if (e.key === 'F7') {
+          e.preventDefault();
+          applyTotalAddition();
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          selectedCartIndex = Math.max(0, selectedCartIndex - 1);
+          updateCart();
+        }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          selectedCartIndex = Math.min(cart.length - 1, selectedCartIndex + 1);
+          updateCart();
+        }
+        if (e.key === 'Enter') {
+          if (document.activeElement === barcodeInputEl) {
+            e.preventDefault();
+            addProduct();
+          } else if (document.activeElement === paymentAmountEl) {
+            e.preventDefault();
+            addPayment();
+          } else if (document.activeElement === emailInput || document.activeElement === passwordInput) {
+            e.preventDefault();
+            loginUser();
+          }
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          if (!paymentFormEl.classList.contains('hidden')) {
+            cancelPayment();
+          }
+        }
+      });
+
+      barcodeInputEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addProduct();
+        }
+      });
+
+      // Inicialização
+      updateTime();
+      setInterval(updateTime, 1000);
+      setInterval(() => {
+        if (document.activeElement !== paymentAmountEl &&
+          document.activeElement !== emailInput &&
+          document.activeElement !== passwordInput &&
+          paymentFormEl.classList.contains('hidden') &&
+          auth.currentUser) {
+          barcodeInputEl.focus();
+        }
+      }, 100);
+    </script>
+
+  </body>
+
+</html>
