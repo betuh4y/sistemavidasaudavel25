@@ -456,10 +456,10 @@
         <div id="payment-form" class="card hidden">
           <h3>Forma de Pagamento</h3>
           <div class="payment-buttons">
-            <button class="btn btn-primary" id="btn-Dinheiro">Dinheiro</button>
-            <button class="btn btn-outline" id="btn-Pix">PIX</button>
-            <button class="btn btn-outline" id="btn-Credito">Crédito</button>
-            <button class="btn btn-outline" id="btn-Debito">Débito</button>
+            <button class="btn btn-primary" id="btn-dinheiro">Dinheiro</button>
+            <button class="btn btn-outline" id="btn-pix">PIX</button>
+            <button class="btn btn-outline" id="btn-credito">Crédito</button>
+            <button class="btn btn-outline" id="btn-debito">Débito</button>
           </div>
           <input type="number" id="payment-amount" placeholder="Valor" step="0.01" style="width: 100%; margin-bottom: 1rem;">
           <div class="payment-actions">
@@ -837,7 +837,7 @@
         if (cart.length > 0) {
           paymentFormEl.classList.remove('hidden');
           finalizeBtn.classList.add('hidden');
-          selectPaymentType('Dinheiro');
+          selectPaymentType('dinheiro');
           paymentAmountEl.value = '';
           paymentAmountEl.focus();
         }
@@ -846,7 +846,7 @@
       // Selecionar tipo de pagamento
       function selectPaymentType(type) {
         selectedPaymentType = type;
-        ['Dinheiro', 'Pix', 'Credito', 'Debito'].forEach(t => {
+        ['dinheiro', 'pix', 'credito', 'debito'].forEach(t => {
           const btn = document.getElementById(`btn-${t}`);
           btn.className = t === type ? 'btn btn-primary' : 'btn btn-outline';
         });
@@ -991,7 +991,7 @@
         doc.text(`Pagamento: ${sale.tipoPagamento}`, margin, yPos + lineHeight);
         yPos += lineHeight * 2;
 
-        if (sale.tipoPagamento === "Dinheiro") {
+        if (sale.tipoPagamento === "dinheiro") {
           const change = parseFloat((amountGiven - sale.valorTotal).toFixed(2));
           doc.text(`Valor Recebido: R$ ${amountGiven.toFixed(2).replace('.', ',')}`, margin, yPos);
           yPos += lineHeight;
@@ -1016,7 +1016,7 @@
           finalizeBtn.classList.remove('hidden');
         }
         paymentAmountEl.value = '';
-        selectPaymentType('Dinheiro');
+        selectPaymentType('dinheiro');
         barcodeInputEl.focus();
       }
 
@@ -1164,7 +1164,7 @@
       }
 
       // Configurar eventos de tipo de pagamento
-      ['Dinheiro', 'pix', 'credito', 'debito'].forEach(type => {
+      ['dinheiro', 'pix', 'credito', 'debito'].forEach(type => {
         const btn = document.getElementById(`btn-${type}`);
         btn.addEventListener('click', () => selectPaymentType(type));
       });
