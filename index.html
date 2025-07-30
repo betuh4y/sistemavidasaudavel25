@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +13,6 @@
         padding: 0;
         box-sizing: border-box;
       }
-
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         background-color: #ffffff;
@@ -22,7 +20,6 @@
         height: 100vh;
         overflow: hidden;
       }
-
       .header {
         background-color: #2e7d32;
         color: #ffffff;
@@ -31,22 +28,18 @@
         justify-content: space-between;
         align-items: center;
       }
-
       .header h1 {
         font-size: 1.5rem;
         font-weight: bold;
       }
-
       .header .time {
         font-size: 1.25rem;
         font-family: 'Courier New', monospace;
       }
-
       .main-container {
         display: flex;
         height: calc(100vh - 80px);
       }
-
       .main-area {
         flex: 1;
         padding: 1.5rem;
@@ -54,7 +47,6 @@
         display: flex;
         flex-direction: column;
       }
-
       .waiting-screen {
         flex: 1;
         display: flex;
@@ -62,31 +54,26 @@
         justify-content: center;
         text-align: center;
       }
-
       .clock-display {
         font-size: 5rem;
         font-family: 'Courier New', monospace;
         color: #4caf50;
         margin-bottom: 2rem;
       }
-
       .date-display {
         font-size: 1.5rem;
         color: #333333;
         margin-bottom: 1rem;
       }
-
       .waiting-message {
         font-size: 1.25rem;
         color: #333333;
       }
-
       .cart-area {
         flex: 1;
         overflow-y: auto;
         margin-bottom: 1rem;
       }
-
       .cart-item {
         background-color: #ffffff;
         border: 1px solid #e0e0e0;
@@ -97,39 +84,32 @@
         justify-content: space-between;
         align-items: center;
       }
-
       .cart-item.selected {
         background-color: #e8f5e9;
         border-color: #4caf50;
       }
-
       .cart-item-info h3 {
         font-size: 1.125rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
       }
-
       .cart-item-details {
         font-size: 0.875rem;
         color: #333333;
       }
-
       .cart-item-price {
         font-size: 1.5rem;
         font-weight: bold;
       }
-
       .discount-info {
         font-size: 0.875rem;
         color: #ff9800;
       }
-
       .input-area {
         display: flex;
         gap: 0.5rem;
         margin-top: 1rem;
       }
-
       .input-area input {
         flex: 1;
         padding: 0.75rem;
@@ -139,12 +119,10 @@
         border-radius: 0.375rem;
         color: #000000;
       }
-
       .input-area input:focus {
         outline: none;
         border-color: #4caf50;
       }
-
       .btn {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
@@ -154,36 +132,29 @@
         cursor: pointer;
         transition: all 0.2s;
       }
-
       .btn-primary {
         background-color: #4caf50;
         color: #ffffff;
       }
-
       .btn-primary:hover {
         background-color: #388e3c;
       }
-
       .btn-secondary {
         background-color: #f5f5f5;
         color: #000000;
         border: 1px solid #e0e0e0;
       }
-
       .btn-secondary:hover {
         background-color: #e0e0e0;
       }
-
       .btn-outline {
         background-color: transparent;
         color: #000000;
         border: 1px solid #e0e0e0;
       }
-
       .btn-outline:hover {
         background-color: #f5f5f5;
       }
-
       .sidebar {
         width: 24rem;
         background-color: #f5f5f5;
@@ -192,7 +163,6 @@
         display: flex;
         flex-direction: column;
       }
-
       .card {
         background-color: #ffffff;
         border: 1px solid #e0e0e0;
@@ -200,118 +170,95 @@
         padding: 1.5rem;
         margin-bottom: 1.5rem;
       }
-
       .total-display {
         text-align: center;
       }
-
       .total-label {
         font-size: 0.875rem;
         color: #333333;
         margin-bottom: 0.5rem;
       }
-
       .total-amount {
         font-size: 2.5rem;
         font-weight: bold;
         color: #4caf50;
       }
-
       .payment-info {
         margin-top: 1rem;
       }
-
       .payment-info .paid {
         font-size: 0.875rem;
         color: #333333;
       }
-
       .payment-info .remaining {
         font-size: 1.125rem;
         font-weight: 600;
         color: #ff9800;
       }
-
       .total-modifiers {
         font-size: 0.875rem;
         margin-top: 0.5rem;
       }
-
       .total-modifiers .discount {
         color: #f44336;
       }
-
       .total-modifiers .addition {
         color: #4caf50;
       }
-
       .payments-list {
         margin-bottom: 1rem;
       }
-
       .payments-list h3 {
         font-weight: 600;
         margin-bottom: 0.5rem;
       }
-
       .payment-item {
         display: flex;
         justify-content: space-between;
         font-size: 0.875rem;
         margin-bottom: 0.25rem;
       }
-
       .payment-form {
         margin-bottom: 1rem;
       }
-
       .payment-form h3 {
         font-weight: 600;
         margin-bottom: 1rem;
       }
-
       .payment-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.5rem;
         margin-bottom: 1rem;
       }
-
       .payment-buttons .btn {
         text-transform: capitalize;
         padding: 0.5rem;
       }
-
       .payment-actions {
         display: flex;
         gap: 0.5rem;
       }
-
       .finalize-btn {
         width: 100%;
         font-size: 1.125rem;
         padding: 1rem;
         margin-bottom: 1rem;
       }
-
       .shortcuts {
         font-size: 0.75rem;
       }
-
       .shortcuts h3 {
         font-weight: 600;
         margin-bottom: 0.5rem;
       }
-
       .shortcut-item {
         margin-bottom: 0.25rem;
       }
-
       .shortcut-item strong {
         display: inline-block;
         width: 2.5rem;
       }
-
       .toast {
         position: fixed;
         top: 1rem;
@@ -325,27 +272,21 @@
         transform: translateX(100%);
         transition: transform 0.3s ease;
       }
-
       .toast.show {
         transform: translateX(0);
       }
-
       .toast.success {
         border-color: #4caf50;
       }
-
       .toast.error {
         border-color: #f44336;
       }
-
       .toast.warning {
         border-color: #ffca28;
       }
-
       .hidden {
         display: none;
       }
-
       #authSection {
         display: flex;
         flex-direction: column;
@@ -354,12 +295,10 @@
         height: 100vh;
         background-color: #f4f4f4;
       }
-
       #authSection h3 {
         color: #333333;
         margin-bottom: 20px;
       }
-
       #authSection input {
         width: 300px;
         padding: 10px;
@@ -369,7 +308,6 @@
         font-size: 1rem;
         color: #000000;
       }
-
       #authSection button {
         background-color: #4caf50;
         color: #ffffff;
@@ -379,15 +317,39 @@
         cursor: pointer;
         margin: 5px;
       }
-
       #authSection button:hover {
         background-color: #388e3c;
+      }
+      /* Estilo atualizado para o campo de valor */
+      .payment-form input#payment-amount {
+        width: 100%;
+        height: 100px;
+        padding: 0 25px;
+        margin-bottom: 1.5rem;
+        font-size: 3.5rem;
+        font-weight: bold;
+        text-align: right;
+        color: #000000;
+        background-color: #f5f5f5;
+        border: 2px solid #e0e0e0;
+        border-radius: 0.75rem;
+        box-sizing: border-box;
+        -moz-appearance: textfield;
+      }
+      .payment-form input#payment-amount::-webkit-outer-spin-button,
+      .payment-form input#payment-amount::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .payment-form input#payment-amount:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
       }
     </style>
     <script type="text/javascript" src="./index.js" defer=""></script>
     <link rel="stylesheet" href="./index.css">
   </head>
-
   <body>
     <!-- Seção de Autenticação -->
     <div id="authSection">
@@ -397,14 +359,12 @@
       <button id="registerBtn">Cadastrar</button>
       <button id="loginBtn">Entrar</button>
     </div>
-
     <!-- Header -->
     <div id="header" class="header hidden">
       <h1>Sistema PDV - VIDA SAUDAVEL</h1>
       <div class="time" id="current-time"></div>
       <button id="logoutBtn" class="btn btn-secondary">Sair</button>
     </div>
-
     <!-- Main Container -->
     <div id="main-container" class="main-container hidden">
       <!-- Main Area -->
@@ -417,17 +377,14 @@
             <div class="waiting-message">Aguardando código de barras...</div>
           </div>
         </div>
-
         <!-- Cart Area -->
         <div id="cart-area" class="cart-area hidden"></div>
-
         <!-- Input Area -->
         <div class="input-area">
           <input type="text" id="barcode-input" placeholder="Código de barras, gramatura (ex: 150 *) ou código do produto" autofocus="">
           <button class="btn btn-primary" onclick="addProduct()">Adicionar Item</button>
         </div>
       </div>
-
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Total -->
@@ -445,13 +402,11 @@
             </div>
           </div>
         </div>
-
         <!-- Payments List -->
         <div id="payments-card" class="card hidden">
           <h3>Pagamentos</h3>
           <div id="payments-list"></div>
         </div>
-
         <!-- Payment Form -->
         <div id="payment-form" class="card hidden">
           <h3>Forma de Pagamento</h3>
@@ -461,24 +416,21 @@
             <button class="btn btn-outline" id="btn-credito">Crédito</button>
             <button class="btn btn-outline" id="btn-debito">Débito</button>
           </div>
-          <input type="number" id="payment-amount" placeholder="Valor" step="0.01" style="width: 100%; margin-bottom: 1rem;">
+          <input type="text" id="payment-amount" placeholder="Valor" inputmode="decimal">
           <div class="payment-actions">
             <button class="btn btn-primary" id="confirm-payment-btn" style="flex: 1;">Confirmar</button>
             <button class="btn btn-outline" id="cancel-payment-btn">Cancelar</button>
           </div>
         </div>
-
         <!-- Total Modifiers Buttons -->
         <div class="card">
           <button class="btn btn-outline" id="total-discount-btn">Desconto Total (F6)</button>
           <button class="btn btn-outline" id="total-addition-btn">Acréscimo Total (F7)</button>
         </div>
-
         <!-- Finalize Button -->
         <button id="finalize-btn" class="btn btn-primary finalize-btn hidden" onclick="showPaymentForm()">
           Finalizar Venda (F5)
         </button>
-
         <!-- Shortcuts -->
         <div class="card shortcuts">
           <h3>Teclas de Atalho</h3>
@@ -495,10 +447,8 @@
         </div>
       </div>
     </div>
-
     <!-- Toast Container -->
     <div id="toast" class="toast"></div>
-
     <script type="module">
       import {
         initializeApp
@@ -674,7 +624,7 @@
           if (!product) {
             showToast(`Produto com código ${input} não encontrado.`, 'error');
             tempWeight = null;
-            barcodeInputEl.placeholder = "Código de barras, gramatura (ex: 150 *) ou código do produto";
+            barcodeInputEl.placeholder = "Código de barras,.mesh (ex: 150 *) ou código do produto";
             return;
           }
           if (product.unit !== 'kilo') {
@@ -866,80 +816,82 @@
           return;
         }
 
-        // Permitir pagamento do valor exato
-        if (parseFloat(amount) > parseFloat(remaining) + 0.01) {
-          showToast(`Valor excede o restante (R$ ${remaining.toFixed(2)}).`, 'error');
-          return;
-        }
+        // Permitir pagamento com valor maior (troco)
+        if (amount < remaining) {
+          payments.push({
+            type: selectedPaymentType.charAt(0).toUpperCase() + selectedPaymentType.slice(1).toLowerCase(),
+            amount: parseFloat(amount)
+          });
+          showToast(`Pagamento de R$ ${parseFloat(amount).toFixed(2)} adicionado. Restante: R$ ${(remaining - amount).toFixed(2)}`, 'success');
+        } else {
+          payments.push({
+            type: selectedPaymentType.charAt(0).toUpperCase() + selectedPaymentType.slice(1).toLowerCase(),
+            amount: parseFloat(amount)
+          });
+          const change = parseFloat((amount - remaining).toFixed(2));
+          showToast(`Pagamento de R$ ${parseFloat(amount).toFixed(2)} adicionado. Troco: R$ ${change.toFixed(2)}`, 'success');
 
-        payments.push({
-          type: selectedPaymentType,
-          amount: parseFloat(amount)
-        });
+          // Finalizar venda automaticamente se o pagamento cobre o total
+          if (parseFloat(totalPaid + amount) >= subtotal - 0.01) {
+            try {
+              const user = auth.currentUser;
+              if (!user) {
+                showToast('Usuário não autenticado.', 'error');
+                return;
+              }
+
+              const updates = {};
+              cart.forEach(item => {
+                const productCode = item.product.id;
+                const currentStock = productsDatabase[productCode]?.estoque || 0;
+                const newStock = currentStock - item.quantity;
+                updates[`produtos/${user.uid}/${productCode}/estoque`] = newStock;
+              });
+
+              const saleData = {
+                dataVenda: new Date().toISOString(),
+                valorTotal: subtotal,
+                tipoPagamento: payments.length > 1 ? "Múltiplo" : payments[0].type,
+                pagamentos: payments,
+                descontoTotal: totalDiscount,
+                acrescimoTotal: totalAddition,
+                items: cart.map(item => ({
+                  codigo: item.product.barcode,
+                  nome: item.product.name,
+                  preco: item.subtotal - item.discount,
+                  quantidade: item.quantity,
+                  unidade: item.product.unit
+                })),
+                observacoes: "Venda PDV",
+                troco: change > 0 ? change : 0
+              };
+
+              const baseRef = ref(db, `vendas/${user.uid}`);
+              const newSaleRef = push(baseRef);
+              await Promise.all([
+                set(newSaleRef, saleData),
+                update(ref(db), updates)
+              ]);
+
+              printSaleReceipt(saleData, parseFloat(amount));
+              showToast(`Venda finalizada! Total: R$ ${subtotal.toFixed(2)} - Troco: R$ ${change.toFixed(2)}`, 'success');
+              cancelSale();
+            } catch (error) {
+              showToast(`Erro ao finalizar venda: ${error.message}`, 'error');
+              console.error(error);
+            }
+          }
+        }
 
         updateTotals();
         updatePaymentsList();
-
-        // Verificar se a venda pode ser finalizada
-        const newTotalPaid = parseFloat((totalPaid + parseFloat(amount)).toFixed(2));
-        if (newTotalPaid >= subtotal - 0.01) {
-          try {
-            const user = auth.currentUser;
-            if (!user) {
-              showToast('Usuário não autenticado.', 'error');
-              return;
-            }
-
-            const updates = {};
-            cart.forEach(item => {
-              const productCode = item.product.id;
-              const currentStock = productsDatabase[productCode]?.estoque || 0;
-              const newStock = currentStock - item.quantity;
-              updates[`produtos/${user.uid}/${productCode}/estoque`] = newStock;
-            });
-
-            const saleData = {
-              dataVenda: new Date().toISOString(),
-              valorTotal: subtotal,
-              tipoPagamento: selectedPaymentType,
-              descontoTotal: totalDiscount,
-              acrescimoTotal: totalAddition,
-              items: cart.map(item => ({
-                codigo: item.product.barcode,
-                nome: item.product.name,
-                preco: item.subtotal - item.discount,
-                quantidade: item.quantity,
-                unidade: item.product.unit
-              })),
-              observacoes: "Venda PDV"
-            };
-
-            const baseRef = ref(db, `vendas/${user.uid}`);
-            const newSaleRef = push(baseRef);
-            await Promise.all([
-              set(newSaleRef, saleData),
-              update(ref(db), updates)
-            ]);
-
-            printSaleReceipt(saleData, parseFloat(amount));
-            showToast(`Venda finalizada! Total: R$ ${subtotal.toFixed(2)}`, 'success');
-            cancelSale();
-          } catch (error) {
-            showToast(`Erro ao finalizar venda: ${error.message}`, 'error');
-            console.error(error);
-          }
-        } else {
-          paymentAmountEl.value = '';
-          paymentAmountEl.focus();
-          showToast(`Pagamento de R$ ${parseFloat(amount).toFixed(2)} adicionado. Restante: R$ ${(remaining - amount).toFixed(2)}`, 'success');
-        }
+        paymentAmountEl.value = '';
+        paymentAmountEl.focus();
       }
 
       // Função para imprimir recibo de venda
       function printSaleReceipt(sale, amountGiven) {
-        const {
-          jsPDF
-        } = window.jspdf;
+        const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
         const shopName = "VIDA SAUDAVEL";
@@ -950,9 +902,7 @@
         const lineHeight = 7;
 
         doc.setFontSize(14);
-        doc.text(shopName, doc.internal.pageSize.getWidth() / 2, yPos, {
-          align: 'center'
-        });
+        doc.text(shopName, doc.internal.pageSize.getWidth() / 2, yPos, { align: 'center' });
         yPos += lineHeight;
 
         doc.setFontSize(10);
@@ -969,9 +919,7 @@
             `${(item.quantidade * 1000).toFixed(0)}g` :
             `${item.quantidade} un`;
           doc.text(`${item.nome} (${quantidadeDisplay})`, margin, yPos);
-          doc.text(`R$ ${item.preco.toFixed(2).replace('.', ',')}`, doc.internal.pageSize.getWidth() - margin, yPos, {
-            align: 'right'
-          });
+          doc.text(`R$ ${item.preco.toFixed(2).replace('.', ',')}`, doc.internal.pageSize.getWidth() - margin, yPos, { align: 'right' });
           yPos += lineHeight;
         });
 
@@ -988,23 +936,36 @@
           yPos += lineHeight;
         }
         doc.text(`TOTAL: R$ ${sale.valorTotal.toFixed(2).replace('.', ',')}`, margin, yPos);
-        doc.text(`Pagamento: ${sale.tipoPagamento}`, margin, yPos + lineHeight);
-        yPos += lineHeight * 2;
+        yPos += lineHeight;
 
-        if (sale.tipoPagamento === "dinheiro") {
-          const change = parseFloat((amountGiven - sale.valorTotal).toFixed(2));
-          doc.text(`Valor Recebido: R$ ${amountGiven.toFixed(2).replace('.', ',')}`, margin, yPos);
+        doc.text("Pagamentos:", margin, yPos);
+        yPos += lineHeight;
+        if (sale.pagamentos && Array.isArray(sale.pagamentos)) {
+          sale.pagamentos.forEach(pagamento => {
+            doc.text(`${pagamento.type}: R$ ${parseFloat(pagamento.amount).toFixed(2).replace('.', ',')}`, margin, yPos);
+            yPos += lineHeight;
+          });
+        } else {
+          doc.text(`Pagamento: ${sale.tipoPagamento}`, margin, yPos);
           yPos += lineHeight;
-          doc.text(`Troco: R$ ${change.toFixed(2).replace('.', ',')}`, margin, yPos);
-          yPos += lineHeight;
+        }
+
+        let totalDinheiro = sale.pagamentos && Array.isArray(sale.pagamentos) ?
+          sale.pagamentos.reduce((sum, p) => p.type.toLowerCase() === "dinheiro" ? sum + parseFloat(p.amount) : sum, 0) : 0;
+        if (totalDinheiro > 0) {
+          const change = parseFloat((totalDinheiro - (sale.pagamentos.length === 1 && sale.tipoPagamento.toLowerCase() === "dinheiro" ? sale.valorTotal : 0)).toFixed(2));
+          if (change > 0) {
+            doc.text(`Valor Recebido (Dinheiro): R$ ${totalDinheiro.toFixed(2).replace('.', ',')}`, margin, yPos);
+            yPos += lineHeight;
+            doc.text(`Troco: R$ ${change.toFixed(2).replace('.', ',')}`, margin, yPos);
+            yPos += lineHeight;
+          }
         }
 
         doc.text("-----------------------------------------", margin, yPos);
         yPos += lineHeight;
         doc.setFontSize(10);
-        doc.text("Obrigado pela preferência!", doc.internal.pageSize.getWidth() / 2, yPos, {
-          align: 'center'
-        });
+        doc.text("Obrigado pela preferência!", doc.internal.pageSize.getWidth() / 2, yPos, { align: 'center' });
 
         doc.save(`venda_${new Date(sale.dataVenda).getTime()}.pdf`);
       }
@@ -1287,7 +1248,5 @@
         }
       }, 100);
     </script>
-
   </body>
-
 </html>
